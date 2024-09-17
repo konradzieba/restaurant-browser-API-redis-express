@@ -4,22 +4,22 @@ import { restaurantKeyById } from '../utils/keys.js';
 import { errorResponse } from '../utils/responses.js';
 
 export async function checkRestaurantExists(
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-	const { restaurantId } = req.params;
+  const { restaurantId } = req.params;
 
-	if (!restaurantId) {
-		return errorResponse(res, 400, 'Restaurant ID not found');
-	}
+  if (!restaurantId) {
+    return errorResponse(res, 400, 'Restaurant ID not found');
+  }
 
-	const client = await initializeRedisClient();
-	const restaurantKey = restaurantKeyById(restaurantId);
-	const exists = await client.exists(restaurantKey);
+  const client = await initializeRedisClient();
+  const restaurantKey = restaurantKeyById(restaurantId);
+  const exists = await client.exists(restaurantKey);
 
-	if (!exists) {
-		return errorResponse(res, 404, 'Restaurant not found');
-	}
-	next();
+  if (!exists) {
+    return errorResponse(res, 404, 'Restaurant not found');
+  }
+  next();
 }

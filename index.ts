@@ -14,9 +14,9 @@ app.use('/cuisines', cuisineRouter);
 app.use(errorHandler);
 
 app
-	.listen(PORT, () => {
-		console.log(`Server running on port ${PORT}`);
-	})
-	.on('error', (error) => {
-		throw new Error(`Error Message: ${error.message}`);
-	});
+  .listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  })
+  .on('error', (error) => {
+    throw new Error(`Error Message: ${error.message}`);
+  });
