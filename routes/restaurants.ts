@@ -14,6 +14,7 @@ import {
   restaurantByRatingKey,
   restaurantCuisineKeyById,
   restaurantDetailsKeyById,
+  restaurantIndexKey,
   restaurantKeyById,
   reviewDetailsKeyById,
   reviewKeyById,
@@ -23,7 +24,7 @@ import { errorResponse, successResponse } from '../utils/responses.js';
 import { checkRestaurantExists } from '../middlewares/check-restaurant-id.js';
 import { ReviewSchema, type Review } from '../schemas/review.js';
 
-const router = express.Router();
+export const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   const { page = 1, limit = 10 } = req.query;
@@ -80,6 +81,19 @@ router.post('/', validate(RestaurantSchema), async (req, res, next) => {
   }
 
   res.send('All restaurants');
+});
+
+router.get('/search', async (req, res, next) => {
+  const { q } = req.query;
+
+  try {
+    const client = await initializeRedisClient();
+    const results = await client.ft.search(restaurantIndexKey, `@name:${q}`);
+
+    return successResponse(res, results);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post(
